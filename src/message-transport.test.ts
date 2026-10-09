@@ -101,9 +101,18 @@ describe("PostMessageTransport", () => {
       try {
         const transport = await createStartedTransport();
         await transport.send(validRequest);
-        fakeWindow.dispatch("message", { source: trustedSource, data: validRequest });
-        fakeWindow.dispatch("message", { source: untrustedSource, data: validRequest });
-        fakeWindow.dispatch("message", { source: trustedSource, data: "not JSON-RPC" });
+        fakeWindow.dispatch("message", {
+          source: trustedSource,
+          data: validRequest,
+        });
+        fakeWindow.dispatch("message", {
+          source: untrustedSource,
+          data: validRequest,
+        });
+        fakeWindow.dispatch("message", {
+          source: trustedSource,
+          data: "not JSON-RPC",
+        });
 
         expect(debug).not.toHaveBeenCalled();
       } finally {
@@ -120,8 +129,14 @@ describe("PostMessageTransport", () => {
       );
       await transport.start();
       await transport.send(validRequest);
-      fakeWindow.dispatch("message", { source: trustedSource, data: validRequest });
-      fakeWindow.dispatch("message", { source: untrustedSource, data: validRequest });
+      fakeWindow.dispatch("message", {
+        source: trustedSource,
+        data: validRequest,
+      });
+      fakeWindow.dispatch("message", {
+        source: untrustedSource,
+        data: validRequest,
+      });
 
       expect(debug).toHaveBeenCalledTimes(3);
       expect(debug.mock.calls.map((call) => call[0])).toEqual([
