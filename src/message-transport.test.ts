@@ -112,7 +112,7 @@ describe("PostMessageTransport", () => {
     });
 
     it("logs only when an explicit logger is supplied", async () => {
-      const debug = mock(() => {});
+      const debug = mock((..._args: unknown[]) => {});
       const transport = new PostMessageTransport(
         eventTarget as unknown as Window,
         trustedSource as MessageEventSource,
@@ -124,9 +124,11 @@ describe("PostMessageTransport", () => {
       fakeWindow.dispatch("message", { source: untrustedSource, data: validRequest });
 
       expect(debug).toHaveBeenCalledTimes(3);
-      expect(debug.mock.calls[0][0]).toBe("Sending message");
-      expect(debug.mock.calls[1][0]).toBe("Parsed message");
-      expect(debug.mock.calls[2][0]).toBe("Ignoring message from unknown source");
+      expect(debug.mock.calls.map((call) => call[0])).toEqual([
+        "Sending message",
+        "Parsed message",
+        "Ignoring message from unknown source",
+      ]);
     });
   });
 
